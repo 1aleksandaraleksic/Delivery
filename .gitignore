@@ -1,2 +1,2 @@
 #bootstrap theme
-/src/main/resources/static/*
+/src/main/resources/static/**
