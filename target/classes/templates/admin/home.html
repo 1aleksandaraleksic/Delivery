@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 th:text="Isporuke" style="display: inline"></h1>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+              	<h3>Isporuke po godinama</h3>
+              	<div class="card-tools">
+                  <a th:href="@{delivery-form}" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Kreiraj novu isporuku
+                  </a>
+                  <a th:href="@{delivery-stats-all}" class="btn btn-danger">
+                    <i class="fas fa-clock"></i>
+                    Sveukupna prodaja
+                  </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+	              <div style="display: flex; justify-content: space-evenly;" >
+	                 <button th:each="date: ${dateList}" 
+	                 		 id="year" 
+	                 		 class="btn btn-inline btn-success btn-lg" 
+	                 		 onclick="onClick(this);" 
+	                 		 th:text="${date}"></button>
+	               </div>
+               </div>
+               <div class="card-body">
+               		<div id="myDiv" style="display: flex;justify-content: center;">
+               		
+               		</div>
+               </div>
+         
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+               
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+ 
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+  <!-- end Main Footer -->
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+
+var month = ['Januar', 'Februar','Mart','April','Maj', 'Jun', 'Jul','Avgust', 'Septembar', 'Oktobar','Novembar','Decembar'];
+
+function onClick(year) {
+	var myDiv = document.getElementById("myDiv");
+	
+	if(document.getElementById("year").disabled){
+		myDiv.removeChild(myDiv);
+	}else{
+		for(var i =0;i<month.length;i++){
+			
+			var a = document.createElement('a');
+			var link = "delivery-list?month="+(i+1)+"&&year="+year.textContent;
+			
+			a.setAttribute('href', link);
+			a.setAttribute('class', 'btn btn-warning');
+			a.setAttribute('style','margin-right:10px;')
+			a.innerHTML = month[i];
+			
+			myDiv.appendChild(a);
+
+		}
+
+		document.getElementById('year').disabled = true;
+	}
+	
+}
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

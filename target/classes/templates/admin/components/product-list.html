@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista proizvoda</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+      <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 style="display: inline">Svi proizvodi</h1>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex;">
+      <div class="col-sm-6">
+          <form th:action="@{product-search}" th:method="get" style="display: flex;">
+       		 <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="search" id="search" style="width: 300px;">
+	          	 <select name="categoryId" class="form-control" style="width: 220px;">
+	          	 <option value="0">-- bez kategorije --</option>
+				 <option th:each="category : ${categoryList}" 
+					          th:value="${category.id}" 
+					          th:text="${category.name}"></option>
+				 </select>
+	          	 <button class="btn btn-navbar" type="submit">
+			     <i class="fas fa-search"></i>
+			     </button>
+		  </form>
+      </div>
+      	<div class="col-sm-4" style="margin-inline:auto;">
+          <a href="product-list-stats">
+	          <button type="button" class="btn btn-block btn-info">
+	          <i class="fas fa-chart-pie"></i>Statistika prodaje
+	          </button>
+          </a>
+      	</div>
+      	</div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 th:text="Proizvoda+' '+${productList.size()}" class="card-title"></h3>
+                <div class="card-tools">
+                  <a th:href="@{product-form?id=0}" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Dodaj novi proizvod
+                  </a>
+                </div>
+              </div>
+              
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th class="text-center">Redni broj</th>
+                      <th class="text-center">Ime proizvoda</th>
+                      <th class="text-center">Cena</th>
+                      <th class="text-center">Jedinica mere</th>
+                      <th class="text-center">Kategorija</th>
+                      <th class="text-center">Opcije</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                 
+                    <tr class="text-center" th:each="product: ${productList}">
+                      <td th:text=${product.id} />
+                      <td th:text="${product.name}"/>
+                      <td th:text="${product.price}"/>
+                      <td th:text="${product.unitOfMeasure}"/>
+                      <td th:text="${product.category.name}"/>                      
+                      <td style="display: flex; justify-content: center;">
+                      <div class="btn-group">
+                        <a th:href="@{product-form(id=${product.id})}">
+                        <button type="button" class="btn btn-block btn-warning">
+                        <i class="fas fa-align-left"></i>Izmeni
+                        </button>
+                        </a>
+                      </div>
+                      <div style="width: 20px;"></div>
+                      <div class="btn-group">
+	                    <a th:href="@{product-delete(id=${product.id})}">	
+	                    <button type="button" class="btn btn-block btn-danger"><i class="fas fa-trash"></i>Obriši</button>
+	                    </a>
+	                  </div>
+	                  </td>
+                    </tr>
+                    </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+    <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!-- <script> -->
+//     $("[data-toggle='modal']").modal();
+<!-- </script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

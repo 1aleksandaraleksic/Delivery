@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 th:text="Isporuke" style="display: inline"></h1>
+          </div>
+          <div class="col-sm-6">
+<!--           <form th:action="@{search}" th:method="get" style="display: flex;"> -->
+<!--        		 <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="search" id="search" style="width: 300px;"> -->
+<!-- 	          	 <select name="occupationId" class="form-control" style="width: 220px;"> -->
+<!-- 	          	 <option value="0">-- bez kategorije --</option> -->
+<!-- 					  <option th:each="occ : ${occupationList}"  -->
+<!-- 					          th:value="${occ.id}"  -->
+<!-- 					          th:text="${occ.name}"></option> -->
+<!-- 					</select> -->
+<!-- 	          	 <button class="btn btn-navbar" type="submit"> -->
+<!-- 			     <i class="fas fa-search"></i> -->
+<!-- 			     </button> -->
+<!-- 		  </form> -->
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Forma za dodavanje novog klijenta</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" th:method="POST" th:action="@{client-save}" th:object="${client}">
+               <input type="hidden" th:field="${client.id}"/> 
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Ime i prezime</label>
+                    <input type="text" class="form-control" placeholder="Unesi ime i prezime" th:field="${client.name}"/>
+                  </div>
+                  <div class="form-group">
+                    <label>Opština/naselje</label>
+                    <input type="text" class="form-control" placeholder="Unesi naziv opštine/naselja" th:field="${client.municipality}"/>
+                  </div>  
+                  <div class="form-group">
+                    <label>Ulica i broj</label>
+                    <input type="text" class="form-control" placeholder="Unesi naziv ulice i broj" th:field="${client.adress}"/>
+                  </div> 
+                  <div class="form-group">
+                    <label>Broj telefona</label>
+                    <input type="text" class="form-control" placeholder="Unesi broj telefona" th:field="${client.number}"/>
+                  </div>    
+
+                      <div class="form-group">
+                        <label>Textarea</label>
+                        <textarea class="form-control" rows="3" placeholder="Detaljnije ..." th:field=${client.detailed}></textarea>
+                      </div>
+                             
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <a href="./" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+              </form>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+    $("[data-toggle='modal']").modal();
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Porudzbina</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+     <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Porudzbina</h1>
+          </div>
+          <a class="btn btn-inline bg-gradient-warning btn-flat" th:href="@{order-list(id=${order.delivery.id})}">
+          	<i class="fas fa-arrow-left">   Porudzbine</i>
+          </a>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Porudzbina</h3>
+                <div class="btn-group" style="float:right;">
+                   <a style="margin-right: 10px;">
+                     <button type="button" class="btn btn-block btn-secondary" onclick="exportTableToImage()">
+                        <i class="fas fa-file-image"></i>  SLIKA
+                     </button>
+                   </a>
+                   <a th:href="@{order-page-edit(id=${order.id})}">
+                     <button type="button" class="btn btn-block btn-secondary">
+                        <i class="fas fa-align-left"></i>Izmeni
+                     </button>
+                   </a>
+                 </div>
+              </div>
+              <!-- /.card-header -->
+              
+              <div class="text-center">
+              <div class="card-body" style="background-color: #f2f2f2;">
+                <table class="table table-bordered" id="order">
+                  <thead>                 
+                    <tr>
+                      <th class="text-center" colspan="5">
+                      	<a th:href="@{client-page(id=${order.client.id})}">
+                      		<h3 id="client-name" th:text="${order.client.name}"></h3>
+                      	</a>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th class="text-center">
+                      	<h6 th:text="${order.client.adress}"></h6>
+                      </th>
+                      <th class="text-center">
+                      	<h6 th:text="${order.client.municipality}"></h6>
+                      </th>
+                      <th class="text-center" colspan="2">
+                      	<h6 th:text="${order.client.number}"></h6>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th class="text-center" colspan="5">
+                      	<h6 th:text="${order.client.detailed}"></h6>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                  	<td colspan="5"><b>Poruceni proizvodi</b></td>
+                  </tr>
+                  <tr style="font-weight:800;">
+                  	<td>Naziv</td>
+                  	<td>Cena po jed.mere</td>
+                  	<td>Kolicina</td>
+                  	<td>Jed. mere</td>
+                  	<td>Ukupnno</td>
+                  </tr>
+                  <tr th:each="item: ${order.orderItemList}">
+                  	<td th:text="${item.product.name}"> </td>
+                  	<td class="price" th:text="${item.product.price}"> </td>
+                  	<td class="quantity" th:text="${item.quantity}"> </td>                  	
+                  	<td class="units" th:text="${item.product.unitOfMeasure}"> </td>
+                  	<td class="total" th:text="${item.product.price*item.quantity}"></td>
+                  </tr>
+                  </tbody>
+                  <tbody>
+                   <tr>
+                  	<td colspan="5" id="total" style="text-align:right; font-size:25px"></td>
+                  </tr>
+                  <tr>
+                  	<td colspan="5">
+                  		<label th:text="${order.description}"></label>
+                  	</td>                  	
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+	<canvas id="can"></canvas>
+  
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+	var elements = document.getElementsByClassName("price");
+	var el2 = document.getElementsByClassName("quantity");
+	var quantities = new Array();
+	var prices = new Array();
+	
+	for(var i=0;i<elements.length;i++){
+		prices.push(elements[i].innerHTML);
+		quantities.push(el2[i].innerHTML);
+	}
+
+	var sum = 0.0;
+	
+	for(var i=0;i<elements.length;i++){
+		sum += elements[i].innerHTML*el2[i].innerHTML;
+	}
+
+	document.getElementById("total").innerHTML = sum + "din.";
+</script>
+<!-- html2canvas -->
+<script src="../../html2canvas.js"></script>
+<script type="text/javascript">
+var clientName = document.getElementById('client-name').innerHTML;
+
+function exportTableToImage() {
+	
+	html2canvas(document.getElementById('order'), {
+           	  onrendered: function (canvas) {
+	              var data = canvas.toDataURL("image/png",0.9);
+	              var a = document.createElement("a");
+	              a.href = data;
+	              a.download = clientName;
+	              a.click();
+           	  }
+	});
+}
+
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Nova porudzbina</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Select2 -->
+  <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+     <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Forma za unos nove porudzbine</h1>
+          </div>
+          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Dodaj novi artikal</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <!-- form start -->
+              <form role="form" th:method="POST" th:action="@{order-save}" th:object="${order}">
+               <input type="hidden" th:field="${order.id}"/> 
+               <input type="hidden" th:field="${order.delivery.id}"/> 
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class="form-group" th:text="${order.date}"></label>
+                  </div>
+                  <div class="dropdown col-md-6">
+	                  <div class="myDropdown form-group">
+	                    <label>Poručilac: </label>
+	                    <div class="btn btn-group">
+	                    <a class="btn btn-secondary" data-target="#search-modal" data-toggle="modal" style="margin-left:20px;">
+	                   		 Pretrazi  <i class="fas fa-search"></i>
+	                    </a>
+	                    <a class="btn btn-secondary" th:href="@{order-form(deliveryId=${order.delivery.id})}" style="margin-left:20px;">
+	                   		 <i class="fas fa-list"></i>   Lista svih
+	                    </a>
+	                    </div>
+	                    <select name="Client" class="form-control" id="c" onchange="selectedClient()" style="margin-top: 10px;">
+	                      <option value="0">--Izaberite--</option>
+						  <option th:each="client : ${clientList}"  
+						          th:value="${client.id}"
+						          th:text="${client.name}"
+						          th:id="'c'+${client.id}"
+						          th:name="${client.adress}"
+						          ></option>
+						</select>	 
+	                  	<label id="clientAddress"></label> 
+                  </div>
+                  <div id="myDiv" class="row">
+                  
+						<div class="col-sm-8">
+						<label>Proizvod: </label>
+	                  <div id="myDiv0" class="form-group" style="display: flex;">
+	                    
+	                    <select id="select-0" name="orderItemList[0].product" class="form-control" onchange="val(0)">
+	                      <option value="0">--Izaberite--</option>
+						  <option th:each="product : ${productList}" 
+						          th:value="${product.id}" 
+						          th:text="${product.name}"
+						          th:id="${product.price}"
+						          th:name="${product.unitOfMeasure}"></option>
+						</select>
+						<label id="price0" class="price"></label><br style="width: 5px;"/>
+						<div id="test" class="price"></div><br style="width: 5px;"/>
+						
+						<label id="unitOfMeasure0"></label><br style="width: 20px;"/>
+						
+						<input id="quantity0" class="quantity" onchange="total()" th:field="*{orderItemList[0].quantity}" style="width:100px;"><br style="width: 20px;"/>
+						
+						<label id="results0"></label>
+						</div>
+	                  </div> 
+				  </div>
+				  <div id="myDiv2"></div>
+                  <div>
+                  <label id="total" style="float: right;margin-right: 50px;"></label>
+                  </div>              
+                </div>
+                <!-- /.card-footer --> 
+                <div class="card-footer">
+               		<button type="button" class="btn btn-primary" onclick="createDiv()">Dodaj proizvod</button>
+                	<button type="button" class="btn btn-secundary" id="removeButton" style="display:none;">Obrisi</button>           
+                </div>          
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Sacuvaj</button>
+                  <a href="./" class="btn btn-outline-secondary">Odustani</a>                
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- MODAL for search -->
+  <div class="modal fade" id="search-modal">
+	<form th:method="get" th:action="@{order-form-client-search}" >
+		<fieldset>
+			<input type="hidden" name="deliveryId" th:value="${order.delivery.id}"></input>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Pretrazi listu korisnika</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Unesi ime/prezime za pretragus?</p>
+						<input name="search" placeholder="ime/prezime"></input>										
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+						<button type="submit" class="btn btn-block bg-gradient-info">Pretrazi</button>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+  </div>
+  <!-- ./MODAL for search -->						
+  
+
+  <!-- Main Footer -->
+ <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+
+var count = 1; 
+
+function val() {
+
+	var t = count-1;
+	
+		var select = document.getElementById("select-"+t);
+		
+  		var result = select.options[select.selectedIndex].id;
+  	    var result2 = select.options[select.selectedIndex].getAttribute('name');
+
+ 	    document.getElementById("price"+t).innerHTML = result;
+ 	    document.getElementById("unitOfMeasure"+t).innerHTML = result2;
+
+}
+
+function selectedClient(){
+ 	var clientSelect = document.getElementById('c');
+ //	clientSelect.disabled = true;
+	clientSelect.selected = true;
+	
+	document.getElementById('clientAddress').innerHTML = document.getElementById('c').selectedOptions[0].getAttribute("name");
+}
+
+function total(){
+	
+	var p = new Array();
+	var q = new Array();
+	
+	for(var i=0;i<count;i++){
+		var elements = document.getElementById("price"+i).innerHTML;
+		var el2 = document.getElementById("quantity"+i).value;
+
+		p.push(elements);
+		q.push(el2);
+	}
+
+	var sum = 0.0;
+	
+	for(var i=0;i<p.length;i++){
+		for(var j=0;j<p.length;j++){
+			if(i == j){
+				sum += p[i]*q[j];
+			}
+		}
+	}
+
+	document.getElementById("total").innerHTML = sum + " din.";
+}
+
+function setRemoveButton(num, disableEnable){
+
+	var buttonR = document.getElementById("removeButton");
+	
+	buttonR.setAttribute('style','block');
+	buttonR.setAttribute('onclick','remove('+num+')');
+	buttonR.disabled = false;
+
+}
+
+function createDiv(){
+	var selectNum = count-1;
+	 var eee = document.getElementById("select-"+selectNum);
+
+	 if(eee.options[eee.selectedIndex].value == 0){
+		 alert('Morate izabrati prethodni proizvod ');
+	 }else{
+		 setRemoveButton(count,"add");
+		var iiii = document.createElement('div');
+		iiii.setAttribute('class', 'form-group');
+		iiii.setAttribute('id', 'myDiv'+count);
+		iiii.setAttribute('style', 'display:flex;');
+		
+		var s = document.createElement('label');
+		s.innerHTML = "Proizvod "+(count+1)+": ";
+		
+		  var t = eee.cloneNode(true);
+		  t.setAttribute('value', 0);
+		  t.setAttribute('id','select-'+count);
+ 		  t.setAttribute('onchange','val('+count+')');
+		  t.setAttribute('name','orderItemList['+count+'].product')
+		  t.disabled = false;
+		  
+		  var a = document.getElementById("price0");
+		  var price = a.cloneNode(true);
+		  price.setAttribute('id', 'price'+count);
+		  price.setAttribute('class', 'price'+count);
+		  price.innerHTML = '';
+
+		  var u = document.getElementById("unitOfMeasure0");
+		  var units = u.cloneNode(true);
+		  units.setAttribute('id','unitOfMeasure'+count);
+		  units.innerHTML = '';
+		  
+		  var q = document.createElement('input');
+		  q.setAttribute('id', "quantity"+count);
+		  q.setAttribute('class', "quantity"+count);
+		  q.setAttribute('value', 1);
+		  q.setAttribute('onchange',"total()");
+		  q.setAttribute('name', "orderItemList["+count+"].quantity");
+		  q.setAttribute('style', 'width:100px;height:35px;')
+		  
+		  var g = document.getElementById("results0");
+		  var result = g.cloneNode(true);
+		  result.setAttribute('id','results'+count);
+		  
+		  var m = document.createElement('br');
+		  m.setAttribute('style','width: 5px');
+		  
+		  var m2 =document.createElement('br');
+		  m2.setAttribute('style','width: 5px');
+	
+		 
+		  document.getElementById("myDiv").appendChild(iiii);
+		  document.getElementById("myDiv"+count).appendChild(s);
+		  document.getElementById("myDiv"+count).appendChild(t);
+		  document.getElementById("myDiv"+count).appendChild(price);
+		  document.getElementById("myDiv"+count).appendChild(m);
+		  document.getElementById("myDiv"+count).appendChild(units);
+		  document.getElementById("myDiv"+count).appendChild(m2);
+		  document.getElementById("myDiv"+count).appendChild(q);
+		  document.getElementById("myDiv"+count).appendChild(result);
+		  
+		  count++;
+	 }
+
+	}
+
+function remove(num){
+	count--;
+	setRemoveButton(num);
+
+	var remove = "myDiv"+num;
+	
+	var myobj = document.getElementById(remove);
+	myobj.remove(); 
+
+	var buttonR = document.getElementById("removeButton");
+
+		buttonR.disabled = true;
+	
+}
+
+</script>
+<script>
+	var clients = document.getElementById("clientName");
+	
+	console.log(clients)
+ </script>
+
+ <script>
+    $("[data-toggle='modal']").modal();
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- Select2 -->
+<script src="../../plugins/select2/js/select2.full.min.js"></script>
+</body>
+</html>

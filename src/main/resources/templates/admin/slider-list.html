@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista slajdova</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Lista slajdova</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Slides</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Svi slajdovi</h3>
+                <div class="card-tools">
+                  <a href="slide-form" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Dodaj novi slajd
+                  </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th>#</th>
+                      <th>Slika</th>
+                      <th>Naslov</th>
+                      <th>Link Path</th>
+                      <th>Link Name</th>
+<!--                       <c:if test="${pageId eq 'sortDec'}"> -->
+<!--                       	<th><a href="slide-list?pageId=sortInc">Position<i class="fas fa-sort-amount-down-alt"></i></a></th> -->
+<!--                       </c:if> -->
+<!--                       <c:if test="${pageId eq 'sortInc'}"> -->
+<!--                       	<th><a href="slide-list?pageId=sortDec">Position<i class="fas fa-sort-amount-up"></i></a></th> -->
+<!--                       </c:if> -->
+                      <th class="text-center">Created</th>
+                      <th class="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="slide: ${sliderList}">
+                      <td th:field="${slide.id}"></td>
+                      <td class="text-center">
+                       <img alt="loading..." th:src="${slide.imageURL}" style="width:150px;"> 
+                      </td>
+                      <td th:field="${slide.title}"></td>
+                      <td th:field="${slide.linkPath}"></td>
+                      <td class="text-right">
+                        <strong class="text-primary" th:text="${slide.linkName}"></strong>
+                      </td>
+                      <td class="text-center">
+                        <strong th:text="${slide.position}"></strong>
+                      </td>
+                      <td class="text-center">
+                        3 days ago
+                      </td>
+                      <td class="text-center">
+                        <div class="btn-group">
+<!--                            <c:if test="${slide.isVisible}"> -->
+<!--                           <a href="slide-enabled?id=${slide.id}" class="btn btn-info"> -->
+<!--                             <i class="fas fa-eye"></i> -->
+<!--                           </a> -->
+<!--                           </c:if> -->
+<!--                           <c:if test="${!slide.isVisible}"> -->
+<!--                           <a href="slide-enabled?id=${slide.id}" class="btn btn-info"> -->
+<!--                             <i class="fas fa-eye-slash"></i> -->
+<!--                           </a> -->
+<!--                           </c:if> -->
+                          <a href="slide-update?id=${slide.id}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i>
+                          </a>
+                          <a class="btn btn-danger" data-toggle="modal" data-target="#delete-modal-${slide.id}">
+                            <i class="fas fa-trash-alt"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    	    <div class="modal fade" id="delete-modal-${slide.id}">
+						      <div class="modal-dialog">
+						        <div class="modal-content">
+						          <div class="modal-header">
+						            <h4 class="modal-title">Delete Slide</h4>
+						            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						              <span aria-hidden="true">&times;</span>
+						            </button>
+						          </div>
+						          <div class="modal-body">
+						            <p>Are you sure you want to delete slide?</p>
+						            <strong></strong>
+						          </div>
+						          <div class="modal-footer justify-content-between">
+						            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						            <a href="slide-delete?id=${slide.id}" class="btn btn-danger">DELETE</a>
+						          </div>
+						        </div>
+						        <!-- /.modal-content -->
+						      </div>
+						      <!-- /.modal-dialog -->
+						    </div>
+						    <!-- /.modal -->
+                    
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>
+

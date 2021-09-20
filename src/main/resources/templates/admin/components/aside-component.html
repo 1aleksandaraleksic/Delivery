@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #001A35;" th:fragment="aside-component">
+    <!-- Product Logo -->
+    <a href="/admin/" class="brand-link">
+      <img src="" alt="Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">PG ĆIRIĆ</span>
+    </a>
+
+    <!-- Sidebar Menu -->
+	<nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <span>
+                Isporuke
+                <i class="right fas fa-angle-left" style="float: right;"></i>
+              </span>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/admin/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Sve isporuke</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="delivery-form" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Nova isporuka</span>
+                </a>
+              </li>
+              <li class="nav-item has-treeview">
+	            <a href="#" class="nav-link">
+	              <i class="nav-icon far fa-plus-square"></i>
+	              <span>
+	               	Proizvodi
+	                <i class="right fas fa-angle-left" style="float: right;"></i>
+	              </span>
+	            </a>
+	            <ul class="nav nav-treeview">
+	              <li class="nav-item">
+	                <a href="/admin/product-list" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Lista proizvoda</span>
+	                </a>
+	              </li>
+	              <li class="nav-item">
+	                <a href="/admin/product-form?id=0" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Dodaj novi proizvod</span>
+	                </a>
+	              </li>
+	            </ul>
+	          </li>
+          	  <li class="nav-item has-treeview">
+	            <a href="#" class="nav-link">
+	              <i class="nav-icon far fa-plus-square"></i>
+	              <span>
+	               	Kategorije
+	                <i class="right fas fa-angle-left" style="float: right;"></i>
+	              </span>
+	            </a>
+	            <ul class="nav nav-treeview">
+	              <li class="nav-item">
+	                <a href="/admin/category-list" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Lista kategorije</span>
+	                </a>
+	              </li>
+	              <li class="nav-item">
+	                <a href="/admin/category-form?id=0" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Dodaj novu kategoriju</span>
+	                </a>
+	              </li>
+	            </ul>
+	          </li>
+	          <li class="nav-item has-treeview">
+	            <a href="#" class="nav-link">
+	              <i class="nav-icon far fa-plus-square"></i>
+	              <span>
+	                Klijenti
+	                <i class="right fas fa-angle-left" style="float: right;"></i>
+	              </span>
+	            </a>
+	            <ul class="nav nav-treeview">
+	              <li class="nav-item">
+	                <a href="/admin/client" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Lista klijenata</span>
+	                </a>
+	              </li>
+	            </ul>
+	            <ul class="nav nav-treeview">
+	              <li class="nav-item">
+	                <a href="client-form" class="nav-link">
+	                  <i class="far fa-circle nav-icon"></i>
+	                  <span>Dodaj novog klijenta</span>
+	                </a>
+	              </li>
+	            </ul>
+	          </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <span>
+                Blog
+                <i class="right fas fa-angle-left" style="float: right;"></i>
+              </span>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{/admin/blog-form(id=0)}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Novi Blog</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/admin/blog-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Lista blogova</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <span>
+                Slajder pocetna strana
+                <i class="right fas fa-angle-left" style="float: right;"></i>
+              </span>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{/admin/slider-form(id=0)}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Novi Slajder</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/admin/slider-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Lista slajdera</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li sec:authorize="hasRole('ROLE_SUPERADMIN')" class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <span>
+                Korisnici sistema
+                <i class="right fas fa-angle-left" style="float: right;"></i>
+              </span>
+            </a>
+          <ul class="nav nav-treeview">
+          	<li class="nav-item">
+                <a href="user-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Lista svi korisnika</span>
+                </a>
+            </li>
+          	<li class="nav-item">
+                <a href="user-form" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Dodaj novog korisnika</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="user-privilages" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <span>Promeni privilegije korisnika</span>
+                </a>
+            </li>  
+          </ul>
+          </li>
+          
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+  </aside> 
+
+</html>

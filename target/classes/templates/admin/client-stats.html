@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Statistika kupca</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Statistika</h1>
+          </div>
+          <div th:if="${totalStats==1}" class="col-sm-6">
+            <a th:href="@{client-stats-average(clientId=${client.id})}">
+			    <button type="button" class="btn btn-block btn-info">
+		          <i class="fas fa-chart-pie"></i>Prosecna porudzbina
+			    </button>
+			 </a>
+          </div>
+          <div th:if="${totalStats!=1}" class="col-sm-6">
+            <a th:href="@{client-stats(clientId=${client.id})}">
+			    <button type="button" class="btn btn-block btn-info">
+		          <i class="fas fa-chart-pie"></i>Statistika kupca
+			    </button>
+			 </a>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Sve porudzbine</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <div class="text-center">
+              <div class="card-body">
+                <table id="tableConten" class="table table-bordered">
+                <caption>PROBA</caption>
+                  <thead>                  
+                    <tr>
+                      <th class="text-center" colspan="6">
+                      	<a th:href="@{client-page(id=${client.id})}">
+                      		<h3  th:text="${client.name}"></h3>
+                      	</a>
+                      </th>
+                    </tr>
+                    <tr>
+                    	<th class="text-center">ID</th>
+                    	<th class="text-center">Proizvod</th>
+                    	<th class="text-center">Cena</th>
+                    	<th class="text-center">Jedinica mere</th>
+                    	<th class="text-center">Ukupna kolicina</th>
+                    	<th class="text-center">Poruceno</th>
+                    </tr>
+                  </thead>
+                  <tbody th:each="product: ${productList}">
+                  <tr>
+                  	<td th:text="${product.id}"> </td>
+                  	<td th:text="${product.name}"> </td>
+                  	<td class="price" th:text="${product.price}"> </td>
+                  	<td class="units" th:text="${product.unitOfMeasure}"> </td>
+                  	<td class="quantity" th:text="${product.quantity}"> </td>
+                  	<td class="timeOrder" th:text="${product.timeOrder}"> </td>
+                  </tr>
+                  </tbody>
+                  <tbody>
+                   <tr>
+                  	<td colspan="5" id="total" style="text-align:center;"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <div class="row">
+        	<div id="target"></div>
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+
+  <!-- Main Footer -->
+	<footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+	var elements = document.getElementsByClassName("price");
+	var prices = new Array();
+	
+	for(var i=0;i<elements.length;i++){
+		prices.push(elements[i].innerHTML);
+	}
+	
+	var el2 = document.getElementsByClassName("quantity");
+	var quantities = new Array();
+	
+	for(var i =0;i<el2.length;i++){
+		quantities.push(el2[i].innerHTML);
+	}
+
+	var sum = 0.0;
+	
+	for(var i=0;i<elements.length;i++){
+		for(var j=0;j<el2.length;j++){
+			if(i == j){
+				sum += elements[i].innerHTML*el2[j].innerHTML;
+			}
+		}
+	}
+
+	document.getElementById("total").innerHTML = sum + "din.";
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- ChartJS -->
+<script src="../../plugins/chart.js/Chart.min.js"></script>
+
+</body>
+</html>

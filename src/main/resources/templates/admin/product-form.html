@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Novi proizvod</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Summernote -->
+  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Forma za unos novog proizvoda</h1>
+          </div>
+          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+	<section class="content">
+      <div class="container-fluid">
+        <div class="row" style="justify-content: center;">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Forma za dodavanje novog proizvoda</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form enctype="multipart/form-data" role="form" th:method="POST" th:action="@{product-save}" th:object="${product}">
+               <input type="hidden" th:field="${product.id}"/> 
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Naziv proizvoda</label>
+                    <input type="text" class="form-control" placeholder="Unesi naziv proizvoda" th:field="${product.name}"/>
+                  </div>
+                  <div class="form-group">
+                    <label>Cena proizvoda</label>
+                    <input type="text" class="form-control" placeholder="Cena" th:field="${product.price}"/>
+                  </div>  
+                  <div class="form-group">
+                    <label>Druga cena</label>
+                    <input type="hidden" th:value="${product.id}"/> 
+                  <!--    <input type="text" class="form-control" placeholder="Druge cene" th:field="${product.pricingList[0].price}"/> -->
+                  </div> 
+                  <div class="form-group">
+                    <label>Jedinica mere</label>
+                    <input type="text" class="form-control" placeholder="Jedinica mere proizvoda" th:field="${product.unitOfMeasure}"/>
+                  </div> 
+                  <div class="form-group">
+                  	<label>Kategorija proizvoda: </label>
+                    <select name="category" class="form-control">
+                      <option value="0">--Izaberite--</option>
+					  <option th:each="category : ${categoryList}"  
+					          th:value="${category.id}"
+					          th:text="${category.name}"
+					          th:selected="${category.id == product.category.id}"
+					          ></option>
+					</select>
+                  </div>
+                  <div class="form-group">
+                    <label>Slika</label>
+                    <div  style="display: flex;justify-content: center;">
+                    	<img id="blah" th:src="${product.imageURL}" class="img-brand-50 mr-3 img-circle" style="width: 200px;max-width: 250px;width: 100%;" alt="Slika proizvoda">
+                    </div>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input onchange="readURL(this);" type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Odaberi</label>
+                      </div>
+                    </div>
+                 </div>
+                 <div class="form-group">
+                 <div class="card-body pad">
+             		 <div class="mb-3">	
+                    <label>Opis proizvoda</label>
+                    <textarea id="textarea" class="form-control" placeholder="Opisite vas proizvod" th:field="${product.description}"></textarea>
+                  </div>
+                  </div>
+                  </div>
+                <div class="form-group">
+                	<label>Da li je proizvod prikazan na glavnoj stranici</label>
+                	<input type="checkbox" th:field="${product.isOnMainPage}" style="margin-left: 10px;"></input>
+                </div>                   
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                  <a href="/admin/product-list" class="btn btn-outline-secondary">Odustani</a>
+                </div>
+              </form>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+function readURL(input) {
+	  if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#blah').attr('src', e.target.result);
+	    }
+	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+	  }
+	  $("#exampleInputFile").change(function() {
+		  readURL(this);
+	  });
+}
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- Summernote -->
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<script>
+$(function () {
+    // Summernote
+    $('textarea').summernote()
+  })
+</script>
+</body>
+</html>

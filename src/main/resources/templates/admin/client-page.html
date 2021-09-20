@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista klijenata</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          	<h1 class="btn btn-info" th:text="${client.name}" style="display: inline"></h1>
+          </div>
+          <div class="col-sm-6">
+			 <a th:href="@{client-stats(clientId=${client.id})}">
+			    <button type="button" class="btn btn-block btn-info">
+		          <i class="fas fa-chart-pie"></i>Statistika kupaca
+			    </button>
+			 </a>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header" style="display: flex;">
+                <h3 th:text="${client.name}" class="card-title bold"></h3>
+                <br style="width: 30px;">
+                <h3 th:text="${client.adress}" class="card-title"></h3>
+                <br style="width: 30px;">
+                <h3 th:text="${client.municipality}" class="card-title"></h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th class="text-center">Isporuka</th>
+                      <th class="text-center">Datum isporuke</th>
+                      <th class="text-center">Poruceno proizvoda</th>
+                      <th class="text-center">Akcije</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                 
+                    <tr class="text-center" th:each="ol: ${client.orderList}">
+                      <td th:text=${ol.delivery.id}/>
+                      <td th:text="${ol.delivery.date}"/>
+                      <td th:text="${ol.orderItemList.size()}"/>
+                      <td>
+                      	<div class="btn-group">
+	                        <a th:href="@{order(id=${ol.id})}">
+		                        <button type="button" class="btn btn-block btn-primary">
+		                        <i class="fas fa-align-left"></i>Prikazi
+		                        </button>
+                        	</a>
+                       	</div>
+                      </td>
+<!-- 	                       <div th:if="${!per.isSeen}" class="btn-group"> -->
+<!-- 	                        <a th:href="@{person-seen(id=${per.id})}">	 -->
+<!-- 	                        <button type="button" class="btn btn-block btn-warning"><i class="fas fa-flag-checkered"></i>Zavsena isporuka</button> -->
+<!-- 	                        </a> -->
+<!-- 	                       </div> -->
+	                       
+	             
+                    </tr>
+                    </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

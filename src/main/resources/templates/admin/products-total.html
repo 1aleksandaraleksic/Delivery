@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista proizvoda za isporuku</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+     <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Porudzbina</h1>
+          </div>
+          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Porudzbina</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="text-center">
+              <div class="card-body">
+              <div class="form-group">
+              <a class="btn btn-secondary" style="float: left;" th:href="@{other-products(deliveryId=${delivery.id},categoryId=1)}">
+			  	<i class="fas fa-cheese">
+			  		Mlecni proizvodi
+			  	</i>
+			  </a>
+			  
+			  <select id="select" name="category" class="form-control" style="display: inline-flex;width:20%;" onchange="location = this.value;">
+	                      <option value="0">--Izaberite--</option>
+						  <option th:each="category : ${categoryList}" 
+						          th:text="${category.name}"
+						          th:value="@{other-products(deliveryId=${delivery.id},categoryId=${category.id})}"></option>
+			  </select>
+			  
+			  <button id="dugme" style="float:right; margin-bottom: 15px;" class="btn btn-secondary" onclick="exportTableToExcel('productListForDelivery')">
+			  	<i class="fas fa-file-excel">
+			  		SAVE TO EXCEL
+			  	</i>
+			  </button>
+			  <button style="float:right; margin-bottom: 15px; margin-right: 15px;" class="btn btn-secondary" onclick="exportTableToPDF()">
+			  	<i class="fas fa-file-pdf">
+			  		SAVE TO PDF
+			  	</i>
+			  </button>
+			  </div>
+                <table id="productListForDelivery" class="table table-bordered">
+                  <thead>                  
+                    <tr>												
+                      <th class="text-center" colspan="5"><h1 th:text="'Lista proizvoda za'+' :'+${delivery.date}"></h1></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                  	<tr>
+                  		<th>Kategorija</th>
+                  		<th>Proizvod</th>
+                  		<th data-html2canvas-ignore="true">Cena</th>
+                  		<th>Jedinica mere</th>
+                  		<th>Kolicina</th>
+                  	</tr>
+                  </thead>
+                  <tbody th:each="item: ${productList}">
+                  <tr>
+                  	<td th:text="${item.category.name}"></td>
+                  	<td th:text="${item.name}"> </td>
+                  	<td class="price" th:text="${item.price}" data-html2canvas-ignore="true"> </td>
+                  	<td class="units" th:text="${item.unitOfMeasure}"> </td>
+                  	<td class="quantity" th:text="${item.quantity}"> </td>
+                  </tr>
+                  </tbody>
+                  <tbody  data-html2canvas-ignore="true">
+                   <tr>
+                  	<td colspan="5" id="total" style="text-align:right;"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+    <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+	var elements = document.getElementsByClassName("price");
+	var prices = new Array();
+	
+	for(var i=0;i<elements.length;i++){
+		prices.push(elements[i].innerHTML);
+	}
+	
+	var el2 = document.getElementsByClassName("quantity");
+	var quantities = new Array();
+	
+	for(var i =0;i<el2.length;i++){
+		quantities.push(el2[i].innerHTML);
+	}
+
+	var sum = 0.0;
+	
+	for(var i=0;i<elements.length;i++){
+		for(var j=0;j<el2.length;j++){
+			if(i == j){
+				sum += elements[i].innerHTML*el2[j].innerHTML;
+			}
+		}
+	}
+
+	document.getElementById("total").innerHTML = sum + "din.";
+</script>
+
+<script type="text/javascript">
+function exportTableToExcel(tableID, filename = ''){ 
+//proslediti i datum isporuke za filename
+	var downloadLink; 
+	var dataType = 'application/vnd.ms-excel'; 
+	var tableSelect = document.getElementById(tableID); 
+	var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20'); 
+	// Specify file name 
+	filename = filename?filename+'.xls':'excel_data.xlsx'; 
+	// Create download link element 
+	downloadLink = document.createElement("a"); 
+	document.body.appendChild(downloadLink); 
+	
+	if(navigator.msSaveOrOpenBlob){ 
+		var blob = new Blob(['\ufeff', tableHTML], { type: dataType }); 
+		navigator.msSaveOrOpenBlob( blob, filename); 
+		}else{ 
+			// Create a link to the file 
+			downloadLink.href = 'data:' + dataType + ', ' + tableHTML; 
+			// Setting the file name 
+			downloadLink.download = filename; 
+			//triggering the function 
+			downloadLink.click(); } 
+	}
+</script>
+
+<script type="text/javascript">
+   function exportTableToPDF() {
+        html2canvas(document.getElementById('productListForDelivery'), {
+           onrendered: function (canvas) {
+              var data = canvas.toDataURL();
+              var docDefinition = {
+                 content: [{
+                     image: data,
+                     width: 500,
+                     height: 750
+                 }]
+              };
+           	  pdfMake.createPdf(docDefinition).download("Lista_proizvoda_za_isporuku.pdf");
+           }
+        });
+   }
+</script>
+<!-- html2canvas -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

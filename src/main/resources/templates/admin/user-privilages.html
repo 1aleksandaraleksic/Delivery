@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 style="display: inline">Korisnici i njihove uloge</h1>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Svi korisnici</h3>
+                <div class="card-tools">
+                  <a href="user-form" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Dodaj novog korisnika
+                  </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th class="text-center">Korisnicko ime</th>
+                      <th class="text-center">Uloga</th>
+                      <th class="text-center">Nova uloga</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center" th:each="user, i: ${userList}">
+                      <td><strong th:text="${user.username}"></strong></td>
+                      <td th:text="${user.authorities}"></td>
+                      <td style="width: 400px;">
+                      <div style="display: inline-block;" class="form-group">
+	                    <select th:field="${user.authorities}" th:id="changeAuthority+${i.index}" th:onchange="'change('+${i.index}+')'">
+	                      <option value="0" >--  Izaberi  --</option>
+						  <option th:each="role : ${roles}" 
+						          th:value="${role.authority}"
+						          th:text="${role.authority}" 
+								  th:id="${user.username}"
+								  th:href="'user-change-authority?username='+${user.username}+'&value='+${role.authority}">
+						          </option>
+						</select>
+	                  </div>
+	                 
+                      </td>
+                    </tr>                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+
+function change (num){
+	var d = document.getElementById('changeAuthority'+num);
+
+		window.location.href = d.selectedOptions[0].attributes.href.value; 
+
+}
+
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

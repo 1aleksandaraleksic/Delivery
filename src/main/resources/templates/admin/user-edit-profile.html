@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+      <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 th:text="Isporuke" style="display: inline"></h1>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row" style="display: flex;justify-content: center;">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Izmena korisnika</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <div id="slika" class="form-group" style="margin-top: 15px;">
+                    <div  style="display: flex;justify-content: center;">
+                    	<img id="blah" class="img-brand-50 mr-3 img-circle" th:value="${user.imageURL}" th:field="${user.imageURL}" style="width: 200px;max-width: 250px;width: 100%;" th:src="*{user.imageURL}" alt="User Avatar">
+                    </div>
+                 </div>
+              <!-- form start -->
+              <form enctype="multipart/form-data" role="form" th:action="@{user-edit}" th:object="${user}" th:method="POST">
+              
+				<!-- HIDDEN fields missing -->
+				<input type="hidden" th:value="${user.enabled}" th:field="${user.enabled}">
+				<input type="hidden" th:value="${user.imageURL}" th:field="${user.imageURL}">
+				<input type="hidden" th:value="${user.username}" th:field=${user.username}>
+				<input type="hidden" th:value="*{authorities}" th:field=*{authorities}>
+								
+                <div class="card-body">
+                <div class="callout callout"  style="display: inline-block;">
+                 <div>
+                  <h5>Korisničko ime</h5>
+                  <p th:value="${user.username}" th:field="${user.username}" th:text="${user.username}"><b style="height: 20px;"></b></p>
+                  <p th:value="${user.authorities[0]}" th:field="${user.authorities[0]}" th:text="${user.authorities[0]}"><b style="height: 20px;"></b></p>
+                 </div>
+                </div>
+                 
+                  <div class="form-group">
+                    <label>Ime</label>
+                    <input type="text" class="form-control" placeholder="Enter name" th:field="${user.name}"/>
+                  </div>
+                  <div class="form-group">
+                    <label>Prezime</label>
+                    <input type="text" class="form-control" placeholder="Enter surname" th:field="${user.surname}"/>
+                  </div>
+                  <div class="form-group">
+                    <label>Slika</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input onchange="readURL(this);" type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Izaberi</label>
+                      </div>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="">Ubaci</span>
+                      </div>
+                    </div>
+                 </div>
+                  <div class="form-group" style="display: flex;justify-content: center;margin-top: 50px;">
+                  	<h5><a href="user-change-password">
+                     <label>Promena Lozinke</label>
+                     <input type="hidden" th:value="${user.password}" th:field="${user.password}">
+                     <i class="fa fa-key" aria-hidden="true"></i>
+                    </a></h5>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+    $("[data-toggle='modal']").modal();
+</script>
+<script type="text/javascript">
+function readURL(input) {
+	  if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#blah').attr('src', e.target.result);
+	    }
+	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+	  }
+	}
+
+	$("#exampleInputFile").change(function() {
+	  readURL(this);
+	});
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

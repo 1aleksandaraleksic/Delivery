@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+      <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 style="display: inline">Novi Korisnik</h1>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Obrazac korisnika</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form enctype="multipart/form-data" role="form" th:action="@{user-save}" th:object="${user}" th:method="post">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Ime</label>
+                    <p>
+                    <input type="text" class="form-control" placeholder="Unesite ime" th:field="*{name}" th:errorclass="is-invalid">
+                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error invalid-feedback"></span>
+                    </p>
+                  </div>
+                  <div class="form-group">
+                    <label>Prezime</label>
+                    <input type="text" class="form-control" placeholder="Unesite prezime" th:field="*{surname}" th:errorclass="is-invalid">
+                    <p th:if="${#fields.hasErrors('surname')}" class="error invalid-feedback" th:errors="*{surname}"></p>
+                  </div>
+                  <div class="form-group">
+                    <label>Slika</label>
+                    <div  style="display: flex;justify-content: center;">
+                    	<img id="blah" class="img-brand-50 mr-3 img-circle" style="width: 200px;max-width: 250px;width: 100%;" alt="User Avatar">
+                    </div>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input onchange="readURL(this);" type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Odaberi</label>
+                      </div>
+                    </div>
+                 </div>
+                  <div class="form-group">
+                    <label>Korisničko ime</label>
+                    <input type="text" class="form-control" placeholder="Unesite ime" th:field="*{username}" th:errorclass="is-invalid">
+                    <div th:if="${#fields.hasErrors('username')}" class="error invalid-feedback" th:errors="*{username}">Incorrect LP</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Lozinka</label>
+                    <input type="password" class="form-control" placeholder="Unesite lozinku" th:field="*{password}" th:errorclass="is-invalid">
+                    <div th:if="${#fields.hasErrors('password')}" class="error invalid-feedback" th:errors="*{password}">Incorrect LP</div>
+                  </div>
+                  <div class="form-group">
+                    <label>Uloga: </label>
+                    <select th:field="*{authorities}">
+					  <option th:each="role : ${roles}" 
+					          th:value="${role.authority}" 
+					          th:text="${role.authority}"></option>
+					</select>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+    $("[data-toggle='modal']").modal();
+</script>
+<script type="text/javascript">
+function readURL(input) {
+	  if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#blah').attr('src', e.target.result);
+	    }
+	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+	  }
+	}
+
+	$("#exampleInputFile").change(function() {
+	  readURL(this);
+	});
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

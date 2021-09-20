@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Novi slajder</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Summernote -->
+  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+<script type="text/javascript">
+	function hideShow() {
+		var k = document.getElementById("formOutSite");
+		var b1 = document.getElementById("button1");
+		var b2 = document.getElementById("button2");
+		
+		if (k.style.display === "none") {
+			k.style.display = "block";
+			b1.style.display = "none";
+			b2.style.display = "none";
+		}
+	}
+	function hideShow2() {
+		var c = document.getElementById("formInsideSite");
+		var b1 = document.getElementById("button1");
+		var b2 = document.getElementById("button2");
+		
+		if (c.style.display === "none") {
+			c.style.display = "block";
+			b1.style.display = "none";
+			b2.style.display = "none";
+		}
+	}
+</script>
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Slajder</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Sizes</a></li>
+              <li class="breadcrumb-item active">Slide Form</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Slide Form</h3>
+              </div>
+              <!-- /.card-header -->
+<!--               <c:if test="${update != 1}"> -->
+<!--               <div id="buttons" class="form-group" style="display: flex;justify-content: center;margin-top: 10px;"> -->
+<!--               	<button id="button1" class="btn btn-primary" style="margin-right: 30px; display: block;" onclick="hideShow2()">Add from Blog</button> -->
+              	
+<!--               	<button id="button2" class="btn btn-primary" style="display: block;" onclick="hideShow()">Add outside source</button> -->
+<!--               </div> -->
+<!--               </c:if> -->
+              <!-- form start -->
+<!--               <c:if test="${update != 1}"> -->
+              <div id="formOutSite" >
+              <form enctype="multipart/form-data" role="form" th:method="POST" th:action="@{slider-save}" th:object="${slider}">
+              <input type="hidden" th:field="${slider.id}"/> 
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Naslov</label>
+                    <input th:filed="${slider.title}" type="text" class="form-control" placeholder="Unesite naslov" />
+<!--                     <form:errors path="title" cssClass="text-danger"/> -->
+                  </div>
+                
+                  <div class="form-group">
+                    <label>Slika</label>
+                    <div  style="display: flex;justify-content: center;">
+                    	<img id="blah" th:src="${slider.imageURL}" class="img-brand-50 mr-3 img-circle" style="width: 200px;max-width: 250px;width: 100%;" alt="Slika proizvoda">
+                    </div>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input onchange="readURL(this);" type="file" name="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Odaberi</label>
+                      </div>
+                    </div>
+                 </div>
+                
+                  <div class="form-group">
+                    <label>Ime linka</label>
+                    <input th:filed="${slider.linkName}" type="text" class="form-control" placeholder="Enter link name" />
+<!--                     <form:errors path="linkName" cssClass="text-danger"/> -->
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Link</label>
+                    <input th:field="${slider.linkPath}" type="text" class="form-control" placeholder="Enter link" />
+<!--                     <form:errors path="linkPath" cssClass="text-danger"/> -->
+                  </div>
+                  
+<!--                   <div class="form-group"> -->
+<!--                     <label>Unavailable position</label> -->
+<!--                     <div> -->
+<!--                     <c:forEach var="tp" items="${takenPosition}"> -->
+<!--                     	<label>[${tp}]</label> -->
+<!--                     </c:forEach> -->
+<!--                     </div> -->
+<!--                   </div> -->
+    
+                  <div class="form-group">
+                    <label>Pozicija</label>
+                    <input th:field="${slider.position}" type="text" class="form-control" placeholder="Unesite broj pozicije" />
+<!--                     <form:errors path="position" cssClass="text-danger"/> -->
+                  </div>
+				  
+				  <div class="form-check">
+                    <input type="checkbox" th:field="${slider.isVisible}" class="form-check-input" id="exampleCheck1" />
+                    <label class="form-check-label" for="exampleCheck1">Da li je vidljiv na naslovnoj strani</label>
+                  </div>
+                  
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+              </form>
+              </div>
+<!--               </c:if> -->
+
+              
+<!--               <c:if test="${update != 1}"> -->
+<!--               <div id="formInsideSite" style="display: none;"> -->
+<!--               <form:form action="blog-to-slide-save" modelAttribute="blog" role="form" > -->
+<!--                 <div class="card-body"> -->
+                      
+<!--                   <div class="form-group"> -->
+<!--                     <label>Choose blog for Slider</label> -->
+<!--                     <div> -->
+                    	
+<!--                     	<form:select items="${blogList}" path="id" itemLabel="title" itemValue="id" class="form-control" />     -->
+<!--                     </div> -->
+<!--                   </div> -->
+                  
+<!--                 </div> -->
+<!--                 /.card-body -->
+<!--                 <div class="card-footer"> -->
+<!--                   <button type="submit" class="btn btn-primary">Save</button> -->
+<!--                 </div> -->
+<!--               </form:form> -->
+<!--               </div> -->
+<!--               </c:if> -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+function readURL(input) {
+	  if (input.files && input.files[0]) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#blah').attr('src', e.target.result);
+	    }
+	    reader.readAsDataURL(input.files[0]); // convert to base64 string
+	  }
+	  $("#exampleInputFile").change(function() {
+		  readURL(this);
+	  });
+}
+</script>
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- Summernote -->
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+
+</body>
+</html>

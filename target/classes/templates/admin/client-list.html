@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista klijenata</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          	<h1 th:text="Klijenti" style="display: inline"></h1>
+          </div>
+	    </div>
+      </div><!-- /.container-fluid -->
+      <div style="display: flex;">
+	    <div class="col-sm-6">
+	      <form th:action="@{client-search}" th:method="get" style="display: flex;justify-content: center;">
+	        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="search" id="search" style="width: 300px;">
+		      <button class="btn btn-navbar" type="submit">
+			   <i class="fas fa-search"></i>
+		      </button>
+		  </form>
+        </div>
+	  </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 title="Rezultati:" th:text="${clientList.size()}" class="card-title"></h3>
+                <div th:if="${!deleteOptions}" class="card-tools">
+                  <a th:href="@{client-list-delete}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Brisanje klijenta
+                  </a>
+                </div>
+                <div class="card-tools" style="margin-right: 10px;">
+                  <a th:href="@{client-form}" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Dodaj novog klijenta
+                  </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr class="text-center">
+                      <th>
+                     	 <label>ID klijenta</label>
+                      </th>
+                      <th>
+                      	<label>Ime i Prezime</label>
+                      </th>
+                      <th>
+                      	<label>Adresa</label>
+                      </th>
+                      <th>
+                      	<label>Opstina</label>
+                      </th>
+                      <th style="width: 180px;">
+                      	<label>Detaljnije</label>
+                      </th>
+                      <th>
+                     	 <label><a th:href="@{client-by-orders}">Ukupno porudzbina</a></label>
+                      </th>
+                      <th class="text-center">Akcije</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                 
+                    <tr class="text-center" th:each="client: ${clientList}">
+                      <td th:text=${client.id}/>
+                      <td><b><a th:href="@{client-page(id=${client.id})}" th:text="${client.name}"></a></b></td>
+                      <td th:text="${client.adress}"/>
+                      <td th:text="${client.municipality}"/>
+                      <td th:text="${client.detailed}"/>
+                      <td th:text="${client.orderList}"/>
+                      <td>
+	                      <div class="btn-group">
+		                        <a th:href="@{client-page(id=${client.id})}">
+			                        <button type="button" class="btn btn-block btn-primary">
+			                        	<i class="fas fa-align-left"></i>Prikazi
+			                        </button>
+		                        </a>
+		                        <a th:href="@{client-edit(id=${client.id})}">
+			                        <button type="button" class="btn btn-block btn-warning">
+			                        	<i class="fas fa-exchange-alt"></i>Izmeni
+			                        </button>
+		                        </a>
+	                       </div>
+	                       <div th:if="${deleteOptions}" class="btn-group">
+			                 <button type="button" class="btn btn-block btn-danger" data-toggle="modal" data-target="#delete-modal" th:attr="data-target='#delete-modal'+${client.id}">
+			                   <i class="fas fa-trash"></i>Obrisi
+			                 </button>
+			              <div class="modal fade" th:id="delete-modal+${client.id}">
+						      <div class="modal-dialog">
+						        <div class="modal-content">
+						          <div class="modal-header">
+						            <h4 class="modal-title">Brisanje klijenta</h4>
+						            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						              <span aria-hidden="true">&times;</span>
+						            </button>
+						          </div>
+						          <div class="modal-body">
+						            <p>Da li ste sigurni da zelite da obrisete klijenta?</p>
+						            <strong></strong>
+						          </div>
+						          <div class="modal-footer justify-content-between">
+						            <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+						            <a  th:href="@{client-delete(id=${client.id})}" class="btn btn-danger">OBRISI</a>
+						          </div>
+						        </div>
+						        <!-- /.modal-content -->
+						      </div>
+						      <!-- /.modal-dialog -->
+					    </div>
+					    <!-- /.modal --> 
+	                       </div>
+                       </td>
+                    </tr>
+                    </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+              </div>
+
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

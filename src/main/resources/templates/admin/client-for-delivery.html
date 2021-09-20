@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+<!--   <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Lista klijenata za isporuku</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Klijenti</h1>
+          </div>
+          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Klijenti</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <div class="text-center">
+              <div class="card-body">
+              
+			  <button style="float:right; margin-bottom: 15px;" class="btn btn-secondary" onclick="exportTableToExcel('productListForDelivery','klijenti')">
+			  	<i class="fas fa-file-excel">
+			  		SAVE TO EXEL
+			  	</i>
+			  </button>
+                <table id="productListForDelivery" class="table table-bordered">
+                  <thead>                  
+                    <tr>												
+                      <th class="text-center" colspan="6"><h1 th:text="'Lista klijenata za'+' :'+' '+${delivery.date}"></h1></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                  	<tr class="text-center">
+                  		<th>Redni broj</th>
+						<th>Ime i prezime</th>
+						<th>Adresa</th>
+						<th>Opstina/naselje</th>
+						<th>Detaljnije</th>
+						<th>Broj telefona</th>
+					</tr>
+                  </thead>
+                  <tbody th:each="client, i: ${clientList}">
+                  <tr class="text-center" >
+                  	<td th:text="${i.index}+1"></td>
+                  	<td th:text="${client.name}"> </td>
+                  	<td th:text="${client.adress}"> </td>
+                  	<td th:text="${client.municipality}"> </td>
+                  	<td th:text="${client.detailed}"> </td>
+                  	<td th:text="${client.number}"> </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS --> 
+<script type="text/javascript">
+function exportTableToExcel(tableID, filename = ''){ 
+//proslediti i datum isporuke za filename
+	var downloadLink; 
+	var dataType = 'application/vnd.ms-excel'; 
+	var tableSelect = document.getElementById(tableID); 
+	var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20'); 
+	// Specify file name 
+	filename = filename?filename+'.xls':'excel_data.xls'; 
+	// Create download link element 
+	downloadLink = document.createElement("a"); 
+	document.body.appendChild(downloadLink); 
+	//
+	if(navigator.msSaveOrOpenBlob){ 
+		var blob = new Blob(['\ufeff', tableHTML], { type: dataType }); 
+		navigator.msSaveOrOpenBlob( blob, filename); 
+		}else{ 
+			// Create a link to the file 
+			downloadLink.href = 'data:' + dataType + ', ' + tableHTML; 
+			// Setting the file name 
+			downloadLink.download = filename; 
+			//triggering the function 
+			downloadLink.click(); } 
+	}
+</script>
+ 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

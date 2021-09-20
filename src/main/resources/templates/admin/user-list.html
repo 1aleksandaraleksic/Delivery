@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Pocetna strana</title>
+
+  <link rel="shortcut icon" href="#">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style type="text/css">/* Chart.js */
+@keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+      <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+          <h1 th:text="Isporuke" style="display: inline"></h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Svi korisnici</h3>
+                <div class="card-tools">
+                  <a th:href="@{user-form}" class="btn btn-success">
+                    <i class="fas fa-plus-square"></i>
+                    Dodaj novog korisnika
+                  </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr class="text-center">
+                      <th>Korisnicko ime</th>
+                      <th>Ime</th>
+                      <th>Prezime</th>
+                      <th>Akcija</th>
+                      <th>Uloga</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="user: ${userList}" class="text-center">
+                      <td><strong th:text="${user.username}"></strong></td>
+                      <td th:text="${user.name}"></td>
+                      <td th:text="${user.surname}"></td>
+                      
+                      <td>
+                        <div class="btn-group">
+                          <a th:if="${user.enabled}" th:href="@{user-enabled(username=${user.username})}" class="btn btn-info">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          <a th:if="${!user.enabled}" th:href="@{user-enabled(username=${user.username})}" class="btn btn-info">
+                            <i class="fas fa-eye-slash"></i>
+                          </a>															 
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" th:attr="data-target='#delete-modal'+${user.username}">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                          
+                          <div class="modal fade" th:id="delete-modal+${user.username}">
+					      <div class="modal-dialog">
+					        <div class="modal-content">
+					          <div class="modal-header">
+					            <h4 class="modal-title">Brisanje korisnika</h4>
+					            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					              <span aria-hidden="true">&times;</span>
+					            </button>
+					          </div>
+					          <div class="modal-body">
+					            <p>Da li ste sigurni da zelite da obrisete korisnika?</p>
+					            <strong></strong>
+					          </div>
+					          <div class="modal-footer justify-content-between">
+					            <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+					            <a th:href="@{user-delete(username=${user.username})}" class="btn btn-danger">OBRISI</a>
+					          </div>
+					        </div>
+					        <!-- /.modal-content -->
+					      </div>
+					      <!-- /.modal-dialog -->
+					    </div>
+					    <!-- /.modal --> 
+                        </div>
+                      </td>
+                      <td th:text="${user.authorities[0]}">
+                      </td>
+                    </tr>                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script>
+    $("[data-toggle='modal']").modal();
+</script>
+
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+
+</body>
+</html>
+    

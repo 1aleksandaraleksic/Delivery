@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Statistika proizvoda</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Statistika</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Sve porudzbine</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <div class="text-center">
+              <div class="card-body">
+                <table id="tableConten" class="table table-bordered">
+                <caption>PROBA</caption>
+                  <thead>                  
+                    <tr>
+<!--                       <th class="text-center" colspan="6" th:text=${product.name}/> -->
+                    </tr>
+                    <tr>
+                    	<th class="text-center">Proizvod</th>
+                    	<th class="text-center">Mesec</th>
+                    	<th class="text-center">Ukupna kolicina</th>
+                    	<th class="text-center">Jedinica mere</th>
+                    	<th class="text-center">Poruceno</th>
+                    </tr>
+                  </thead>
+                  <tbody th:each="product: ${productList}">
+                  <tr>
+                  	<td th:text="${product.name}"> </td>
+                  	<td class="date" th:text="${product.month}+' '+${product.year}"> </td>
+                  	<td class="quantity" th:text="${product.quantity}"> </td>
+                  	<td class="units" th:text="${product.unitOfMeasure}"> </td>
+                  	<td class="timeOrder" th:text="${product.timeOrder}"> </td>
+                  </tr>
+                  </tbody>
+                  <tbody>
+                   <tr>
+                  	<td colspan="3" id="total" style="text-align:right;"></td>
+                  	<td colspan="2" id="total2" style="text-align:right;"></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <div class="row">
+        	<div id="target"></div>
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+
+  <!-- Main Footer -->
+	<footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+	
+var el = document.getElementsByClassName("timeOrder");	
+var el2 = document.getElementsByClassName("quantity");
+var sum = 0.0;
+var sum2 = 0.0;
+
+for(var i =0;i<el2.length;i++){
+	sum2 = sum2 + parseFloat(el[i].innerHTML);
+	sum = sum + parseFloat(el2[i].innerHTML);
+}
+
+document.getElementById("total").innerHTML = sum +' '+ document.getElementsByClassName("units")[0].innerHTML;
+document.getElementById("total2").innerHTML = sum2 + " x";
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- ChartJS -->
+<script src="../../plugins/chart.js/Chart.min.js"></script>
+
+</body>
+</html>

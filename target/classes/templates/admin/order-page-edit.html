@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+  <meta charset="UTF-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Porudzbina</title>
+
+  <link rel="shortcut icon" href="#" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+      <!-- Navbar -->
+  <nav th:replace="/admin/components/navbar-header-component :: navbar-component"> </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside th:replace="/admin/components/aside-component :: aside-component"> </aside>
+   
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Porudzbina</h1>
+          </div>
+          
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Porudzbina</h3>
+              </div>
+              <!-- /.card-header -->
+              
+              <div class="text-center">
+              <div class="card-body">
+                <button style="float:right; margin-bottom: 10px;" onclick="addProduct()" class="btn btn-inline bg-gradient-success btn-lg">Dodaj proizvod</button>
+              <form role="form" th:method="POST" th:action="@{order-update}" th:object="${order}">
+              <input type="hidden" th:field="${order.id}"/> 
+              <input type="hidden" th:field="${order.delivery.id}"/> 
+              <input type="hidden" th:field="${order.date}" />
+              <input type="hidden" th:field="${order.client.id}" />
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th class="text-center" colspan="5"><h1 th:text="${order.client.name}"></h1></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody">
+                  <tr th:id="'tr'+${i.index}" th:each="item, i: *{orderItemList}">
+                  	<input type="hidden" th:field="*{orderItemList[__${i.index}__].product}"/>
+                  	<td th:text="*{orderItemList[__${i.index}__].product.name}"></td>
+                  	<td class="price" th:text="*{orderItemList[__${i.index}__].product.price}">
+<!--                   	<td class="price"> -->
+<!--                   		<div class="form-group"> -->
+<!-- 		                  	<label>Cena proizvoda: </label> -->
+<!-- 		                    <select name="pricingList" class="form-control"> -->
+<!-- 		                      <option value="0">--Izaberite--</option> -->
+<!-- 							  <option th:each="price : *{orderItemList[__${i.index}__].product.pricingList}"   -->
+<!-- 							          th:value="${price.id}" -->
+<!-- 							          th:text="${price.price}" -->
+<!-- 							          ></option> -->
+<!-- 							</select> -->
+<!-- 		                  </div> -->
+<!--                   	</td> -->
+                  	<td class="units" th:text="*{orderItemList[__${i.index}__].product.unitOfMeasure}"></td>
+                  	<td class="quantity"><input th:field="*{orderItemList[__${i.index}__].quantity}"></input></td>
+                  	<td><a class="btn btn-danger" th:onclick="deleteItem+'(tr'+${i.index}+')'" >Brisanje</a></td>
+                  </tr>
+                  </tbody>
+                  <tbody>
+                   <tr>
+                  	<td colspan="5" id="total" style="text-align:right;"></td>
+                  </tr>
+                  <tr>
+                  	<td colspan="5" style="text-align:right;">
+                  		<label style="float:left;">Komentar</label>
+                  		<textarea class="form-control" rows="3" placeholder="Komentar..." th:field="${order.description}"></textarea>
+                  	</td>                  	
+                  </tr>
+                  </tbody>
+                </table>
+                 <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                 <a th:href="@{order(id=${order.id})}" class="btn btn-outline-secondary">Odustani</a>
+                </form>
+              </div>
+              </div>
+              
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+					<div style="display: none;">
+						<select id="select-0" name="orderItemList[0].product" class="form-control col-md-8" onchange="val(0)">
+	                      <option value="0">--Izaberite--</option>
+						  <option th:each="product : ${productList}" 
+						          th:value="${product.id}" 
+						          th:text="${product.name}"
+						          th:id="${product.price}"
+						          th:name="${product.unitOfMeasure}"></option>
+						</select>
+  					</div>
+
+  <!-- Main Footer -->
+  <footer class="main-footer" th:replace="/admin/components/footer-component :: footer-component"></footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<script type="text/javascript">
+	var elements = document.getElementsByClassName("price");
+	var el2 = document.getElementsByClassName("quantity");
+	var quantities = new Array();
+	var prices = new Array();
+	
+	for(var i=0;i<elements.length;i++){
+		prices.push(elements[i].innerHTML);
+		quantities.push(el2[i].children[0].defaultValue);
+	}
+
+	var sum = 0.0;
+	
+	for(var i=0;i<elements.length;i++){
+		for(var j=0;j<el2.length;j++){
+			if(i == j){
+				sum += prices[i]*quantities[j];
+			}
+		}
+	}
+
+	document.getElementById("total").innerHTML = sum + " din.";
+</script>
+<script type="text/javascript">
+
+function addProduct() {
+	
+	var count = document.getElementById('tbody').childElementCount;
+	
+	var tr = document.createElement('tr');
+	tr.setAttribute('id', 'tr'+count);
+	
+	var td0 = document.createElement('td');
+	td0.setAttribute('id','name'+count);
+	
+	var td1 = document.createElement('td');
+	td1.setAttribute('class','price'+count);
+	td1.setAttribute('id','price'+count);
+	
+	var td2 = document.createElement('td');
+	td2.setAttribute('class','units'+count);
+	td2.setAttribute('id','units'+count);
+	
+	var td3 = document.createElement('td');
+	td3.setAttribute('class','quantity'+count);
+	td3.setAttribute('id','quantity'+count);
+
+	var s = document.getElementById("select-0");
+	
+	var t = s.cloneNode(true);
+// 	  t.setAttribute('value', 0);
+ 	  t.setAttribute('id','select-'+count);
+ 	  t.setAttribute('onchange','val('+count+')');
+ 	  t.setAttribute('name','orderItemList['+count+'].product')
+
+	var input = document.createElement('input');
+	input.setAttribute('name', 'orderItemList['+count+'].product');
+	input.setAttribute('type','hidden');	
+	
+	var input2 = document.createElement('input');
+	input2.setAttribute('name', 'orderItemList['+count+'].quantity');
+	input2.setAttribute('value', 0);
+	input2.setAttribute('onchange','');
+	
+	var target = "tr"+count;
+	var nameTarget = "name"+count;
+	var qName = "quantity"+count;
+
+	document.getElementById("tbody").appendChild(tr);
+	document.getElementById(target).appendChild(td0);
+	document.getElementById(target).appendChild(input);
+ 	document.getElementById(nameTarget).appendChild(t);
+ 	
+ 	document.getElementById(target).appendChild(td1);
+ 	document.getElementById(target).appendChild(td2);
+ 	document.getElementById(target).appendChild(td3);
+ 	document.getElementById(qName).appendChild(input2);
+}
+</script>
+<script type="text/javascript">
+function deleteItem(tr){
+	tr.parentNode.removeChild(tr);
+}
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>
