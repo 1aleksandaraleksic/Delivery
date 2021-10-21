@@ -1,5 +1,6 @@
 package com.pgciric.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,9 +15,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 @Table(name = "users")
-public class User {
+public class User{
 	
 	@Id
 	@Column
@@ -135,6 +138,21 @@ public class User {
 				+ "]";
 	}
 
-	
+	public List<GrantedAuthority> getGrantedAuth(){
+		List<GrantedAuthority> list = new ArrayList<>();
+		
+		for(Roles r: authorities){
+			GrantedAuthority ga = new GrantedAuthority() {
+				
+				@Override
+				public String getAuthority() {
+					return r.toString();
+				}
+			};
+			list.add(ga);
+		}
+		
+		return list;
+	}
 
 }
